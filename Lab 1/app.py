@@ -18,9 +18,11 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# -------------------- Styling --------------------
+# -------------------- Styling (Glassmorphism) --------------------
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @keyframes fadeInUp {
     0% { opacity: 0; transform: translateY(18px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -29,32 +31,44 @@ st.markdown("""
     0% { opacity: 0; }
     100% { opacity: 1; }
 }
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes floatOrb {
+    0% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(20px,-25px) scale(1.06); }
+    100% { transform: translate(0,0) scale(1); }
 }
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 0 0 rgba(99,102,241,.45); }
-    70% { box-shadow: 0 0 0 14px rgba(99,102,241,0); }
-    100% { box-shadow: 0 0 0 0 rgba(99,102,241,0); }
-}
-@keyframes floatCar {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(0px); }
+@keyframes floatOrbSlow {
+    0% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(-25px,20px) scale(1.08); }
+    100% { transform: translate(0,0) scale(1); }
 }
 @keyframes shimmer {
     0% { background-position: -400px 0; }
     100% { background-position: 400px 0; }
 }
 @keyframes popIn {
-    0% { opacity: 0; transform: scale(.85); }
-    80% { opacity: 1; transform: scale(1.03); }
+    0% { opacity: 0; transform: scale(.9); }
+    80% { opacity: 1; transform: scale(1.02); }
     100% { opacity: 1; transform: scale(1); }
 }
+@keyframes glowPulse {
+    0% { box-shadow: 0 8px 32px rgba(99,102,241,.18); }
+    50% { box-shadow: 0 8px 40px rgba(168,85,247,.30); }
+    100% { box-shadow: 0 8px 32px rgba(99,102,241,.18); }
+}
 
-html, body, [class*="css"] { scroll-behavior: smooth; }
+html, body, [class*="css"] {
+    scroll-behavior: smooth;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ambient gradient background with floating color orbs */
+.stApp {
+    background: radial-gradient(circle at 15% 20%, rgba(99,102,241,.16), transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(236,72,153,.14), transparent 40%),
+                radial-gradient(circle at 50% 90%, rgba(56,189,248,.12), transparent 45%),
+                linear-gradient(180deg, #0b1120 0%, #0f172a 100%);
+    background-attachment: fixed;
+}
 
 .block-container {
     padding-top: 1.2rem;
@@ -62,146 +76,242 @@ html, body, [class*="css"] { scroll-behavior: smooth; }
     animation: fadeIn .6s ease-in-out;
 }
 
+/* ---------- Glass utility ---------- */
+.glass {
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+
+/* ---------- Hero ---------- */
 .hero {
-    padding: 2.2rem 2.4rem;
-    border-radius: 24px;
+    padding: 2.4rem 2.6rem;
+    border-radius: 28px;
     color: white;
-    background: linear-gradient(120deg,#0f172a,#312e81,#1e293b,#4338ca);
-    background-size: 300% 300%;
-    animation: gradientShift 10s ease infinite, fadeInUp .7s ease-out;
-    margin-bottom: 1.3rem;
+    background: linear-gradient(120deg, rgba(99,102,241,.35), rgba(168,85,247,.28), rgba(236,72,153,.22));
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid rgba(255,255,255,.18);
+    margin-bottom: 1.4rem;
     position: relative;
     overflow: hidden;
+    animation: fadeInUp .7s ease-out;
     transition: transform .35s ease, box-shadow .35s ease;
+}
+.hero::before {
+    content: "";
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,.22), transparent 70%);
+    animation: floatOrb 7s ease-in-out infinite;
+}
+.hero::after {
+    content: "";
+    position: absolute;
+    bottom: -80px; left: 10%;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(236,72,153,.20), transparent 70%);
+    animation: floatOrbSlow 9s ease-in-out infinite;
 }
 .hero:hover {
     transform: translateY(-3px);
-    box-shadow: 0 16px 40px rgba(67,56,202,.35);
+    box-shadow: 0 20px 48px rgba(99,102,241,.28);
 }
 .hero h1 {
-    margin: 0;
-    font-size: 2.6rem;
-    display: inline-block;
-    animation: floatCar 3.5s ease-in-out infinite;
+    margin: 0 0 .3rem;
+    font-size: 2.7rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.25;
+    position: relative;
+    z-index: 1;
 }
-.hero p { margin: .45rem 0 0; opacity: .85; animation: fadeIn 1.2s ease-in-out; }
+.hero p {
+    margin: .5rem 0 0;
+    opacity: .88;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+}
 
+/* ---------- Generic glass card ---------- */
 .card {
-    padding: 1rem 1.1rem;
-    border: 1px solid rgba(128,128,128,.20);
-    border-radius: 16px;
-    background: rgba(128,128,128,.055);
+    padding: 1.1rem 1.2rem;
+    border-radius: 18px;
+    background: rgba(255,255,255,.055);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255,255,255,.12);
     transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     animation: fadeInUp .5s ease-out;
 }
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 26px rgba(0,0,0,.12);
-    border-color: rgba(99,102,241,.45);
+    box-shadow: 0 14px 34px rgba(0,0,0,.28);
+    border-color: rgba(168,85,247,.4);
 }
 
+/* ---------- Prediction result ---------- */
 .prediction {
-    padding: 1.8rem;
-    border-radius: 20px;
+    padding: 2rem;
+    border-radius: 24px;
     text-align: center;
-    border: 1px solid rgba(99,102,241,.35);
-    background: linear-gradient(135deg, rgba(99,102,241,.12), rgba(168,85,247,.10));
-    animation: popIn .55s cubic-bezier(.34,1.56,.64,1), pulseGlow 2.2s ease-out 1;
+    background: rgba(255,255,255,.07);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(168,85,247,.35);
+    animation: popIn .55s cubic-bezier(.34,1.56,.64,1), glowPulse 2.6s ease-in-out infinite;
 }
 .prediction .price {
-    font-size: 2.6rem;
+    font-size: 2.8rem;
     font-weight: 800;
-    background: linear-gradient(90deg,#6366f1,#a855f7,#ec4899);
+    background: linear-gradient(90deg,#818cf8,#c084fc,#f472b6);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientShift 3s ease infinite;
 }
-.small-muted { opacity: .7; font-size: .9rem; }
+.small-muted { opacity: .72; font-size: .9rem; }
 
-/* Metrics */
+/* ---------- Metrics as glass tiles ---------- */
 div[data-testid="stMetric"] {
-    background: rgba(128,128,128,.06);
-    border: 1px solid rgba(128,128,128,.18);
-    border-radius: 14px;
-    padding: .7rem .9rem .5rem;
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 16px;
+    padding: .8rem 1rem .6rem;
     transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     animation: fadeInUp .55s ease-out;
 }
 div[data-testid="stMetric"]:hover {
     transform: translateY(-4px) scale(1.015);
-    box-shadow: 0 10px 24px rgba(99,102,241,.18);
-    border-color: rgba(99,102,241,.5);
+    box-shadow: 0 14px 30px rgba(99,102,241,.22);
+    border-color: rgba(168,85,247,.5);
 }
 
-/* Buttons */
+/* ---------- Buttons ---------- */
 .stButton > button {
+    background: linear-gradient(120deg, rgba(99,102,241,.85), rgba(168,85,247,.85)) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,.25) !important;
+    backdrop-filter: blur(10px);
     transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
-    border-radius: 12px !important;
+    border-radius: 14px !important;
 }
 .stButton > button:hover {
     transform: translateY(-2px) scale(1.015);
-    box-shadow: 0 8px 20px rgba(99,102,241,.35);
-    filter: brightness(1.05);
+    box-shadow: 0 10px 26px rgba(99,102,241,.4);
+    filter: brightness(1.08);
 }
 .stButton > button:active {
     transform: translateY(0px) scale(.98);
 }
 
-/* Tabs */
+/* ---------- Tabs ---------- */
+div[data-baseweb="tab-list"] {
+    background: rgba(255,255,255,.05);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,.1);
+}
 button[data-baseweb="tab"] {
-    transition: color .2s ease, transform .2s ease;
+    border-radius: 12px !important;
+    transition: color .2s ease, transform .2s ease, background .2s ease;
 }
 button[data-baseweb="tab"]:hover {
     transform: translateY(-2px);
+    background: rgba(255,255,255,.06);
 }
 div[data-baseweb="tab-highlight"] {
+    background: linear-gradient(120deg, rgba(99,102,241,.9), rgba(168,85,247,.9)) !important;
+    border-radius: 10px !important;
     transition: left .3s cubic-bezier(.4,0,.2,1), width .3s cubic-bezier(.4,0,.2,1) !important;
 }
 
-/* Sliders / inputs subtle entrance */
+/* ---------- Inputs entrance ---------- */
 div[data-testid="stSlider"], div[data-testid="stSelectbox"],
-div[data-testid="stRadio"], div[data-testid="stNumberInput"] {
+div[data-testid="stRadio"], div[data-testid="stNumberInput"],
+div[data-testid="stMultiSelect"], div[data-testid="stFileUploader"] {
     animation: fadeInUp .5s ease-out;
 }
 
-/* Dataframe / expander */
+/* ---------- Expander / dataframe as glass ---------- */
 div[data-testid="stExpander"] {
-    transition: box-shadow .25s ease;
-    border-radius: 12px;
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.1) !important;
+    border-radius: 14px;
+    transition: box-shadow .25s ease, border-color .25s ease;
     animation: fadeInUp .5s ease-out;
+    overflow: hidden;
 }
 div[data-testid="stExpander"]:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,.08);
+    box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    border-color: rgba(168,85,247,.3) !important;
+}
+div[data-testid="stDataFrame"] {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.08);
 }
 
-/* Sidebar */
+/* ---------- Sidebar ---------- */
 section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, rgba(15,23,42,.9), rgba(30,27,75,.85));
+    backdrop-filter: blur(20px);
     animation: fadeIn .6s ease-in-out;
+    border-right: 1px solid rgba(255,255,255,.08);
 }
 
-/* Section headers get a little left-accent */
-h2, h3 {
+/* ---------- Section headers ---------- */
+div[data-testid="stMarkdownContainer"] h2,
+div[data-testid="stMarkdownContainer"] h3 {
     position: relative;
-    padding-left: .55rem;
+    padding-left: 1.1rem;
+    margin-top: 1.8rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-weight: 700;
+    box-sizing: border-box;
 }
-h2::before, h3::before {
+h1 {
+    line-height: 1.3;
+    margin-bottom: .6rem;
+}
+div[data-testid="stMarkdownContainer"] h2::before,
+div[data-testid="stMarkdownContainer"] h3::before {
     content: "";
     position: absolute;
-    left: 0; top: 8%;
-    height: 84%;
+    left: 0; top: 12%;
+    height: 76%;
     width: 4px;
     border-radius: 4px;
-    background: linear-gradient(180deg,#6366f1,#a855f7);
+    background: linear-gradient(180deg,#818cf8,#c084fc);
+}
+
+/* ---------- Divider glow ---------- */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(168,85,247,.4), transparent);
+    margin: 1.2rem 0;
 }
 
 .shimmer-bar {
     height: 6px;
     border-radius: 6px;
-    background: linear-gradient(90deg,#6366f1 0%,#a855f7 25%,#6366f1 50%,#a855f7 75%,#6366f1 100%);
+    background: linear-gradient(90deg,#818cf8 0%,#c084fc 25%,#818cf8 50%,#c084fc 75%,#818cf8 100%);
     background-size: 800px 100%;
     animation: shimmer 3.2s linear infinite;
-    margin: .2rem 0 1rem 0;
+    margin: .3rem 0 1.1rem 0;
+    box-shadow: 0 0 14px rgba(168,85,247,.5);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -279,6 +389,19 @@ def predict_new_car(model, df, X_columns, values):
     encoded = encoded.reindex(columns=X_columns, fill_value=0)
 
     return float(model.predict(encoded)[0])
+
+def glassify(fig):
+    """Apply a transparent, glass-friendly look so charts sit naturally on the page."""
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(255,255,255,0.03)",
+        font=dict(color="#e2e8f0", family="Inter, sans-serif"),
+        title_font=dict(size=17, color="#f1f5f9"),
+        legend=dict(bgcolor="rgba(0,0,0,0)"),
+    )
+    fig.update_xaxes(gridcolor="rgba(255,255,255,0.08)", zerolinecolor="rgba(255,255,255,0.12)")
+    fig.update_yaxes(gridcolor="rgba(255,255,255,0.08)", zerolinecolor="rgba(255,255,255,0.12)")
+    return fig
 
 def animated_metric_row(columns_specs):
     """columns_specs: list of (label, value_str). Renders with a tiny staggered reveal."""
@@ -489,7 +612,6 @@ with tabs[1]:
                 template=PLOTLY_TEMPLATE,
                 color_discrete_sequence=px.colors.qualitative.Bold,
                 title=f"{feature.title()} vs Price",
-                trendline="ols" if color_arg is None else None,
             )
             fig.update_traces(marker=dict(size=point_size, line=dict(width=0)))
         else:
@@ -510,7 +632,7 @@ with tabs[1]:
             margin=dict(t=60, l=10, r=10, b=10),
             hovermode="closest",
         )
-        st.plotly_chart(fig, use_container_width=True, theme=None)
+        st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     st.divider()
 
@@ -539,7 +661,7 @@ with tabs[1]:
         bargap=0.05,
         margin=dict(t=60, l=10, r=10, b=10),
     )
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     st.divider()
 
@@ -571,7 +693,7 @@ with tabs[1]:
             aspect="auto",
         )
         fig.update_layout(margin=dict(t=60, l=10, r=10, b=10))
-        st.plotly_chart(fig, use_container_width=True, theme=None)
+        st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
     else:
         st.warning("Select at least two attributes.")
 
@@ -598,7 +720,7 @@ with tabs[1]:
         coloraxis_showscale=False,
         margin=dict(t=60, l=10, r=10, b=10),
     )
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
 # -------------------- Model Lab --------------------
 with tabs[2]:
@@ -637,7 +759,7 @@ with tabs[2]:
         marker=dict(line=dict(color="#0f172a", width=2)),
     )
     fig.update_layout(margin=dict(t=60, l=10, r=10, b=10))
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     st.subheader("Model Coefficients")
 
@@ -672,7 +794,7 @@ with tabs[2]:
         margin=dict(t=60, l=10, r=10, b=10),
         transition_duration=400,
     )
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     with st.expander("📋 View coefficient table"):
         st.dataframe(coef_df.head(show_n), use_container_width=True, hide_index=True)
@@ -746,7 +868,7 @@ with tabs[3]:
         ))
 
     fig.update_layout(margin=dict(t=60, l=10, r=10, b=10), transition_duration=400)
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     st.subheader("📉 Residual / Prediction Error Plot")
 
@@ -772,7 +894,7 @@ with tabs[3]:
         margin=dict(t=60, l=10, r=10, b=10),
         transition_duration=400,
     )
-    st.plotly_chart(fig, use_container_width=True, theme=None)
+    st.plotly_chart(glassify(fig), use_container_width=True, theme=None)
 
     st.subheader("Metric Interpretation")
 
