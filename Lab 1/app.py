@@ -1,4 +1,5 @@
 import time
+from io import StringIO
 
 import streamlit as st
 import pandas as pd
@@ -231,7 +232,7 @@ def preprocess(df):
 
 @st.cache_data
 def train_cached(data_json, test_size, random_state):
-    df = pd.read_json(data_json)
+    df = pd.read_json(StringIO(data_json))
 
     encoded = pd.get_dummies(df, drop_first=True)
     X = encoded.drop(columns=["price"])
