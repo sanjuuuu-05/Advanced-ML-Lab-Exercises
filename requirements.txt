@@ -6,3 +6,5 @@ seaborn
 scikit-learn
 plotly
 statsmodels
+tensorflow>=2.15
+nbformat>=5.9
