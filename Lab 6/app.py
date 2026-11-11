@@ -19,17 +19,69 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 html, body, [class*="css"] {font-family:'DM Sans',sans-serif;}
-.stApp {background: radial-gradient(circle at 10% 0%, #e9f3ff 0, transparent 32%), linear-gradient(135deg,#f7f9ff,#f2f5fb);}
-h1,h2,h3 {font-family:'Space Grotesk',sans-serif;color:#15233b;}
+.stApp {background: linear-gradient(135deg,#0b1220,#111827 55%,#172554); color:#f9fafb;}
+h1,h2,h3 {font-family:'Space Grotesk',sans-serif;color:#f9fafb;}
 .hero {padding:2rem 2.2rem;border-radius:24px;background:linear-gradient(120deg,#111d3b,#253d71 60%,#4969a5);color:white;box-shadow:0 18px 55px #1e376022;margin-bottom:1.2rem;animation:rise .7s ease-out;}
 .hero h1 {color:white;font-size:2.5rem;margin:0;}
 .hero p {color:#dce8ff;font-size:1rem;margin:.5rem 0 0;}
-.kpi {background:white;border:1px solid #e4eaf4;border-radius:18px;padding:1rem 1.2rem;box-shadow:0 8px 24px #23395b0b;transition:transform .2s,box-shadow .2s;}
+.kpi {background:#1f2937;border:1px solid #374151;border-radius:18px;padding:1rem 1.2rem;box-shadow:0 8px 24px #00000030;transition:transform .2s,box-shadow .2s;}
 .kpi:hover {transform:translateY(-4px);box-shadow:0 14px 30px #23395b18;}
-.kpi small {color:#66758e;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
-.kpi strong {display:block;font-size:1.8rem;color:#172b4d;margin-top:.25rem;}
-.panel {background:white;border:1px solid #e4eaf4;border-radius:20px;padding:1.2rem 1.3rem;margin:.5rem 0 1rem;box-shadow:0 8px 25px #23395b09;}
-div[data-testid="stTabs"] button {font-weight:700;}
+.kpi small {color:#cbd5e1;font-weight:600;text-transform:uppercase;letter-spacing:.08em;}
+.kpi strong {display:block;font-size:1.8rem;color:#ffffff;margin-top:.25rem;}
+.panel {background:#1f2937;color:#f9fafb;border:1px solid #374151;border-radius:20px;padding:1.2rem 1.3rem;margin:.5rem 0 1rem;box-shadow:0 8px 25px #00000030;}
+/* Dark tab styling: no white tab surfaces */
+.stTabs,
+div[data-testid="stTabs"] {
+    background: transparent !important;
+}
+div[data-testid="stTabs"] [data-baseweb="tab-list"],
+div[data-testid="stTabs"] [role="tablist"] {
+    display: flex !important;
+    gap: 6px !important;
+    background: #111827 !important;
+    background-color: #111827 !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    border: 1px solid #374151 !important;
+}
+div[data-testid="stTabs"] button[data-baseweb="tab"],
+div[data-testid="stTabs"] [role="tab"] {
+    color: #f9fafb !important;
+    background: #1f2937 !important;
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+}
+div[data-testid="stTabs"] button[data-baseweb="tab"] *,
+div[data-testid="stTabs"] [role="tab"] * {
+    color: #f9fafb !important;
+    fill: #f9fafb !important;
+}
+div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"],
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"] {
+    color: #ffffff !important;
+    background: #2563eb !important;
+    background-color: #2563eb !important;
+    border-color: #3b82f6 !important;
+}
+div[data-testid="stTabs"] button[data-baseweb="tab"][aria-selected="true"] *,
+div[data-testid="stTabs"] [role="tab"][aria-selected="true"] * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+div[data-testid="stTabs"] [data-baseweb="tab-highlight"] {
+    background-color: #3b82f6 !important;
+}
+div[data-testid="stTabs"] [data-baseweb="tab-border"] {
+    background-color: #374151 !important;
+}
+/* Keep common Streamlit surfaces dark */
+[data-testid="stTabContent"] { background: transparent !important; }
+[data-testid="stMarkdownContainer"], .stText, .stCaption {
+    color: #e5e7eb;
+}
 @keyframes rise {from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 """, unsafe_allow_html=True)
